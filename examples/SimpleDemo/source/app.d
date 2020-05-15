@@ -7,10 +7,11 @@ import core.time;
 void main() {
     // testGet1();
     // testGet2();
-    // testPost();
+    // testPost1();
+    testPost2();
 
     // testWithHeaders();
-    testUploading();
+    // testUploading();
 }
 
 void testGet1() {
@@ -41,9 +42,18 @@ void testGet2() {
     trace(res.header("Server")[0]);
 }
 
-void testPost() {
+void testPost1() {
     Response res = HttpClient.post("http://10.1.222.110:8080/",
             ["username": "Administrator", "password": "hunt@@2020"]);
+
+    string content = res.bodyContent();
+    trace(content);
+}
+
+void testPost2() {
+    Response res = HttpClient.request()
+        .asJson()
+        .post("http://10.1.222.110:8080/");
 
     string content = res.bodyContent();
     trace(content);

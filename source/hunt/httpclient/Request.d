@@ -31,7 +31,7 @@ private struct BodyFormat {
  */
 class Request {
 
-    private string _contentType = MimeType.TEXT_PLAIN_VALUE;
+    private string _contentType; // = MimeType.TEXT_PLAIN_VALUE;
     private string[string] _headers;
     private Duration _timeout;
     private PendingFile[] _pendingFiles;
@@ -186,6 +186,10 @@ class Request {
         if(_bodyFormat == BodyFormat.Multipart) {
             MultipartBody.Builder builder = new MultipartBody.Builder();
 
+            foreach(string key, string value; _formData) {
+                builder.addFormDataPart(key, value, MimeType.TEXT_PLAIN_VALUE);
+            }
+
             foreach(ref PendingFile file; _pendingFiles) {
                 string mimeType = _mimeUtil.getMimeByExtension(file.filename);
                 if(mimeType.empty)
@@ -196,18 +200,11 @@ class Request {
 
                 // TODO: Tasks pending completion -@zhangxueping at 2020-05-15T16:41:19+08:00
                 // Add headers
-
             }
-
-            foreach(string key, string value; _formData) {
-                builder.addFormDataPart(key, value, MimeType.TEXT_PLAIN_VALUE);
-            }
-
-            // builder.addFormDataPart("title", "Putao Logo", MimeType.TEXT_PLAIN_VALUE);
 
             httpBody = builder.build();
         } else {
-
+            httpBody = HttpBody.create(_contentType, cast(const(ubyte)[])null);
         }
         
         return post(url, httpBody);
@@ -221,11 +218,15 @@ class Request {
             encoder.put(name, value);
         }
         string content = encoder.encode();
-        return post(url, MimeType.APPLICATION_X_WWW_FORM_VALUE, cast(const(ubyte)[])content);
+        if(_contentType.empty)
+            _contentType = MimeType.APPLICATION_X_WWW_FORM_VALUE;
+        return post(url, _contentType, cast(const(ubyte)[])content);
     }
 
     Response post(string url, JSONValue json) {
-        return post(url, MimeType.APPLICATION_JSON_VALUE, cast(const(ubyte)[])json.toString());
+        if(_contentType.empty)
+            _contentType = MimeType.APPLICATION_JSON_VALUE;
+        return post(url, _contentType, cast(const(ubyte)[])json.toString());
     } 
 
     Response post(string url, string contentType, const(ubyte)[] content) {
