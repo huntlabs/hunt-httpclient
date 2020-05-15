@@ -2,7 +2,7 @@ module hunt.httpclient.HttpClient;
 
 import hunt.http.client;
 import hunt.httpclient.Response : Response;
-import hunt.httpclient.PendingRequest;
+import hunt.httpclient.Request : Request;
 
 private alias HuntHttpClient = hunt.http.client.HttpClient.HttpClient;
 // private alias RequestBuilder = HttpClientRequest.Builder;
@@ -56,8 +56,8 @@ struct HttpClient {
         return post(url, MimeType.APPLICATION_JSON_VALUE, cast(const(ubyte)[])json.toString());
     }
 
-    static PendingRequest request() {
-        return new PendingRequest();
+    static Request request() {
+        return new Request();
     }
 
     // static RequestBuilder attach(RequestBuilder request) {

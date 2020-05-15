@@ -1,9 +1,11 @@
-module hunt.httpclient.PendingRequest;
+module hunt.httpclient.Request;
 
+import hunt.Functions;
 import hunt.http.client;
 import hunt.httpclient.Response : Response;
 import hunt.logging.ConsoleLogger;
 
+import core.thread;
 import core.time;
 
 private alias HuntHttpClient = hunt.http.client.HttpClient.HttpClient;
@@ -11,7 +13,7 @@ private alias HuntHttpClient = hunt.http.client.HttpClient.HttpClient;
 /**
  * 
  */
-class PendingRequest {
+class Request {
 
     private string[string] _headers;
     private Duration _connectionTimeout;
@@ -29,20 +31,52 @@ class PendingRequest {
     this() {
     }
 
-    PendingRequest withHeaders(string[string] headers) {
+    Request withHeaders(string[string] headers) {
         _headers = headers;
         return this;
     }
 
-    PendingRequest timeout(Duration dur) {
+    Request timeout(Duration dur) {
         _connectionTimeout = dur;
         return this;
     }
 
-    PendingRequest retry(int timers, Duration delay) {
+    Request retry(int timers, Duration delay) {
         _tries = timers;
         _retryDelay = delay;
         return this;
+    }
+
+    Response get(string url) {
+        Response res;
+        .retry(_tries, (int attempts) {
+                res = doGet(url);
+            }, _retryDelay);
+        return res;        
+    }
+
+    private Response doGet(string url) {
+        HttpClientOptions options = new HttpClientOptions();
+        options.getTcpConfiguration().setIdleTimeout(_connectionTimeout);
+        options.getTcpConfiguration().setConnectTimeout(_connectionTimeout);
+
+        HuntHttpClient client = new HuntHttpClient(options);
+        scope (exit) {
+            client.close();
+        }
+
+        RequestBuilder builder = new RequestBuilder();
+
+        if(_headers !is null) {
+            foreach(string name, string value; _headers) {
+                builder.addHeader(name, value);
+            }
+        }
+
+        HttpClientRequest request = builder.url(url).build();
+        HttpClientResponse response = client.newCall(request).execute();
+
+        return new Response(response);
     }
 
     Response post(string url, string[string] data = null) {
@@ -56,12 +90,12 @@ class PendingRequest {
 
         Response res;
         .retry(_tries, (int attempts) {
-                res = post(url, MimeType.APPLICATION_X_WWW_FORM_VALUE, cast(const(ubyte)[])content);
+                res = doPost(url, MimeType.APPLICATION_X_WWW_FORM_VALUE, cast(const(ubyte)[])content);
             }, _retryDelay);
         return res;
     }
 
-    private Response post(string url, string contentType, const(ubyte)[] content) {
+    private Response doPost(string url, string contentType, const(ubyte)[] content) {
         HttpClientOptions options = new HttpClientOptions();
         options.getTcpConfiguration().setIdleTimeout(_connectionTimeout);
         options.getTcpConfiguration().setConnectTimeout(_connectionTimeout);
@@ -87,9 +121,6 @@ class PendingRequest {
     }
 
 }
-
-import hunt.Functions;
-import core.thread;
 
 /**
  * Retry an operation a given number of times.
