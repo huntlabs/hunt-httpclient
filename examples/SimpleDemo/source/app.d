@@ -2,7 +2,10 @@ import std.stdio;
 
 import hunt.httpclient;
 import hunt.logging.ConsoleLogger;
-import core.time;
+import std.conv;
+
+enum string Host = "10.1.222.110";
+enum ushort Port = 8080;
 
 void main() {
     // testGet1();
@@ -15,13 +18,13 @@ void main() {
 }
 
 void testGet1() {
-    // string name = HttpClient.get("http://10.1.222.110/test.json")["name"];
+    // string name = Http.get("http://" ~ Host ~ "/test.json")["name"];
     // trace(name);
 
-    // string content = HttpClient.get("http://10.1.222.110/").bodyContent();
+    // string content = Http.get("http://" ~ Host ~ "/").bodyContent();
     // trace(content);
 
-    Response res = HttpClient.get("http://10.1.222.110/");
+    Response res = Http.get("http://" ~ Host ~ "/");
     HttpField[] headers = res.headers();
     foreach (HttpField header; headers) {
         trace(header.toString());
@@ -31,9 +34,9 @@ void testGet1() {
 }
 
 void testGet2() {
-    Response res = HttpClient.request()
+    Response res = Http.request()
         .timeout(3.seconds)
-        .get("http://10.1.222.110:8080/");
+        .get("http://" ~ Host ~ ":" ~ Port.to!string() ~ "/");
     HttpField[] headers = res.headers();
     foreach (HttpField header; headers) {
         trace(header.toString());
@@ -43,7 +46,7 @@ void testGet2() {
 }
 
 void testPost1() {
-    Response res = HttpClient.post("http://10.1.222.110:8080/",
+    Response res = Http.post("http://" ~ Host ~ ":" ~ Port.to!string() ~ "/",
             ["username": "Administrator", "password": "hunt@@2020"]);
 
     string content = res.bodyContent();
@@ -51,20 +54,20 @@ void testPost1() {
 }
 
 void testPost2() {
-    Response res = HttpClient.request()
+    Response res = Http.request()
         .asJson()
-        .post("http://10.1.222.110:8080/");
+        .post("http://" ~ Host ~ ":" ~ Port.to!string() ~ "/");
 
     string content = res.bodyContent();
     trace(content);
 }
 
 void testWithHeaders() {
-    Response res = HttpClient.request()
-        .timeout(3.seconds)
+    Response res = Http.request()
         .retry(3, 3.seconds)
+        .timeout(3.seconds)
         .withHeaders(["X-First": "foo", "X-Second":"bar"])
-        .post("http://10.1.222.110:8080/", ["name":"Taylor"]);
+        .post("http://" ~ Host ~ ":" ~ Port.to!string() ~ "/", ["name":"Taylor"]);
 
     string content = res.bodyContent();
     trace(content);        
@@ -72,11 +75,11 @@ void testWithHeaders() {
 
 void testUploading() {
     
-    Response res = HttpClient.request()
+    Response res = Http.request()
         .attach("dub", "dub.json")
         // .attach("source", "source/app.d")
         .formData(["name" : "Hunt-HTTP"])
-        .post("http://10.1.222.110:8080/");
+        .post("http://" ~ Host ~ ":" ~ Port.to!string() ~ "/");
 
     string content = res.bodyContent();
     trace(content); 
