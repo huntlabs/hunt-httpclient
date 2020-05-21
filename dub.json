@@ -6,7 +6,7 @@
     "homepage": "https://www.huntlabs.net",
     "license": "Apache-2.0",
     "dependencies": {
-        "hunt-http": "~>0.5.1"
+        "hunt-http": "~>0.6.0"
     },
 	"subConfigurations": {"hunt-http" : "tls"}
 }

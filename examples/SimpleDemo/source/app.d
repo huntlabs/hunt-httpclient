@@ -21,7 +21,7 @@ void testGet1() {
     // string name = Http.get("http://" ~ Host ~ "/test.json")["name"];
     // trace(name);
 
-    // string content = Http.get("http://" ~ Host ~ "/").bodyContent();
+    // string content = Http.get("http://" ~ Host ~ "/").content();
     // trace(content);
 
     Response res = Http.get("http://" ~ Host ~ "/");
@@ -49,7 +49,7 @@ void testPost1() {
     Response res = Http.post("http://" ~ Host ~ ":" ~ Port.to!string() ~ "/",
             ["username": "Administrator", "password": "hunt@@2020"]);
 
-    string content = res.bodyContent();
+    string content = res.content();
     trace(content);
 }
 
@@ -58,7 +58,7 @@ void testPost2() {
         .asJson()
         .post("http://" ~ Host ~ ":" ~ Port.to!string() ~ "/");
 
-    string content = res.bodyContent();
+    string content = res.content();
     trace(content);
 }
 
@@ -69,7 +69,7 @@ void testWithHeaders() {
         .withHeaders(["X-First": "foo", "X-Second":"bar"])
         .post("http://" ~ Host ~ ":" ~ Port.to!string() ~ "/", ["name":"Taylor"]);
 
-    string content = res.bodyContent();
+    string content = res.content();
     trace(content);        
 }
 
@@ -81,7 +81,7 @@ void testUploading() {
         .formData(["name" : "Hunt-HTTP"])
         .post("http://" ~ Host ~ ":" ~ Port.to!string() ~ "/");
 
-    string content = res.bodyContent();
+    string content = res.content();
     trace(content); 
 }
 

@@ -26,7 +26,7 @@ class Response {
      *
      * @return string
      */
-    string bodyContent() {
+    string content() {
         if(_stringContent.empty()) {
             _stringContent = _response.getBody().toString();
         }
@@ -40,14 +40,14 @@ class Response {
      */
     JSONValue json() {
         if(_jsonContent == JSONValue.init) {
-            string content = bodyContent();
+            string content = content();
             _jsonContent = parseJSON(content);
         }
         return _jsonContent;
     }
 
     string opIndex(string key) {
-        string content = bodyContent();
+        string content = content();
         JSONValue jv;
         try {
             jv = parseJSON(content);
