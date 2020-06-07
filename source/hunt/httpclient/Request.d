@@ -128,6 +128,12 @@ class Request {
         return this;
     }
 
+    Request withCookies(Cookie[] cookies...) {
+        string cookie = HttpHeader.COOKIE.toString();
+        _headers[cookie] = generateCookies(cookies);
+        return this;
+    }
+
     /**
      * Specify an authorization token for the request.
      */
