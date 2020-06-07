@@ -8,13 +8,15 @@ enum string Host = "10.1.222.110";
 enum ushort Port = 8080;
 
 void main() {
-    // testGet1();
+    testGet1();
     // testGet2();
     // testPost1();
-    testPost2();
+    // testPost2();
 
     // testWithHeaders();
     // testUploading();
+
+    // testGetHttps();
 }
 
 void testGet1() {
@@ -32,6 +34,7 @@ void testGet1() {
 
     trace(res.header("Server")[0]);
 }
+
 
 void testGet2() {
     Response res = Http.request()
@@ -83,5 +86,15 @@ void testUploading() {
 
     string content = res.content();
     trace(content); 
+}
+
+
+void testGetHttps() {
+
+    Response res = Http.get("https://www.baidu.com");
+    HttpField[] headers = res.headers();
+    foreach (HttpField header; headers) {
+        trace(header.toString());
+    }
 }
 
