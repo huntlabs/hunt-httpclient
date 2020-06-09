@@ -37,7 +37,7 @@ void testGet1() {
 
 
 void testGet2() {
-    Response res = Http.request()
+    Response res = Http
         .timeout(3.seconds)
         .get("http://" ~ Host ~ ":" ~ Port.to!string() ~ "/");
     HttpField[] headers = res.headers();
@@ -57,8 +57,7 @@ void testPost1() {
 }
 
 void testPost2() {
-    Response res = Http.request()
-        .asJson()
+    Response res = Http.asJson()
         .post("http://" ~ Host ~ ":" ~ Port.to!string() ~ "/");
 
     string content = res.content();
@@ -66,8 +65,7 @@ void testPost2() {
 }
 
 void testWithHeaders() {
-    Response res = Http.request()
-        .retry(3, 3.seconds)
+    Response res = Http.retry(3, 3.seconds)
         .timeout(3.seconds)
         .withHeaders(["X-First": "foo", "X-Second":"bar"])
         .post("http://" ~ Host ~ ":" ~ Port.to!string() ~ "/", ["name":"Taylor"]);
@@ -78,8 +76,7 @@ void testWithHeaders() {
 
 void testUploading() {
     
-    Response res = Http.request()
-        .attach("dub", "dub.json")
+    Response res = Http.attach("dub", "dub.json")
         // .attach("source", "source/app.d")
         .formData(["name" : "Hunt-HTTP"])
         .post("http://" ~ Host ~ ":" ~ Port.to!string() ~ "/");

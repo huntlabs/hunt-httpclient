@@ -35,4 +35,4 @@ core
 
 # others
 *.tar.gz
-examples/SimpleDemo/simple-demo
+examples/simple/simple
