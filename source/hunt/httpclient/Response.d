@@ -27,7 +27,7 @@ class Response {
      * @return string
      */
     string content() {
-        if(_stringContent.empty()) {
+        if(_stringContent.empty() && _response.haveBody()) {
             _stringContent = _response.getBody().toString();
         }
         return _stringContent;
