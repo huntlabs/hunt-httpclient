@@ -2,11 +2,11 @@
 	"name": "hunt-httpclient",
 	"targetType": "library",
     "description": "A simple HttpClient wrapper.",
-    "copyright": "Copyright (C) 2015-2020, HuntLabs",
+    "copyright": "Copyright (C) 2015-2021, HuntLabs",
     "homepage": "https://www.huntlabs.net",
     "license": "Apache-2.0",
     "dependencies": {
-        "hunt-http": "~>0.6.6"
+        "hunt-http": "~>0.7.0"
     },
 	"subConfigurations": {"hunt-http" : "tls"}
 }
