@@ -266,7 +266,7 @@ class Request {
     Response post(string url, string[string] data) {
         assert(data !is null, "No data avaliable!");
 
-        UrlEncoded encoder = new UrlEncoded;
+        UrlEncoded encoder = new UrlEncoded(UrlEncodeStyle.HtmlForm);
         foreach (string name, string value; data) {
             encoder.put(name, value);
         }
@@ -314,7 +314,7 @@ class Request {
     Response put(string url, string[string] data) {
         assert(data !is null, "No data avaliable!");
 
-        UrlEncoded encoder = new UrlEncoded;
+        UrlEncoded encoder = new UrlEncoded(UrlEncodeStyle.HtmlForm);
         foreach (string name, string value; data) {
             encoder.put(name, value);
         }
@@ -362,7 +362,7 @@ class Request {
     Response del(string url, string[string] data) {
         assert(data !is null, "No data avaliable!");
 
-        UrlEncoded encoder = new UrlEncoded;
+        UrlEncoded encoder = new UrlEncoded(UrlEncodeStyle.HtmlForm);
         foreach (string name, string value; data) {
             encoder.put(name, value);
         }
@@ -410,7 +410,7 @@ class Request {
     Response patch(string url, string[string] data) {
         assert(data !is null, "No data avaliable!");
 
-        UrlEncoded encoder = new UrlEncoded;
+        UrlEncoded encoder = new UrlEncoded(UrlEncodeStyle.HtmlForm);
         foreach (string name, string value; data) {
             encoder.put(name, value);
         }
