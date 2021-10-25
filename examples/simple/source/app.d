@@ -4,7 +4,9 @@ import hunt.httpclient;
 import hunt.logging.ConsoleLogger;
 import std.conv;
 
-enum string Host = "10.1.222.110";
+import hunt.net.EventLoopPool;
+
+enum string Host = "10.1.23.222";
 enum ushort Port = 8080;
 
 void main() {
@@ -17,6 +19,11 @@ void main() {
     // testUploading();
 
     // testGetHttps();
+
+    getchar();
+
+    shutdownEventLoopPool();
+
 }
 
 void testGet1() {
@@ -33,6 +40,9 @@ void testGet1() {
     }
 
     trace(res.header("Server")[0]);
+
+    string content =  res.content();
+    info(content);    
 }
 
 
@@ -50,7 +60,7 @@ void testGet2() {
 
 void testPost1() {
     Response res = Http.post("http://" ~ Host ~ ":" ~ Port.to!string() ~ "/",
-            ["username": "Administrator", "password": "hunt@@2020"]);
+            ["username": "Administrator", "password": `abcd 1234567890ABCD1234~!@#$%^&*()_+{}<>?:"[]\|';/.,`]);
 
     string content = res.content();
     trace(content);
